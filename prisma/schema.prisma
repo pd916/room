@@ -1,0 +1,142 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  role         Role
+  profileImage String?        // Optional profile pic
+  classes      Class[]        @relation("TeacherClasses")
+  enrollments  ClassEnrollment[]
+  messages     Message[]
+  announcements Announcement[]
+  quizResponses QuizResponse[]
+  createdQuizzes Quiz[]      @relation("CreatedQuizzes")
+  Attendance Attendance[]
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+}
+
+enum Role {
+  student
+  teacher
+}
+
+model Class {
+  id            String      @id @default(uuid())
+  title         String
+  subject       Subject?
+  inviteCode    String? @unique
+  teacher       Profile   @relation("TeacherClasses", fields: [teacherId], references: [id])
+  teacherId     String
+  startTime     DateTime?
+  livekitRoomId String?
+  isPublished Boolean @default(false)
+
+  enrollments   ClassEnrollment[]
+  messages      Message[]
+  quizzes       Quiz[]
+  attendance    Attendance[]
+  announcements Announcement[]
+
+  createdAt     DateTime           @default(now())
+}
+
+enum Subject {
+  MATH
+  ENGLISH
+  SCIENCE
+  HISTORY
+  COMPUTER
+}
+
+model ClassEnrollment {
+  id         String   @id @default(uuid())
+  class      Class    @relation(fields: [classId], references: [id])
+  classId    String
+  profile    Profile   @relation(fields: [profileId], references: [id])
+  profileId  String
+  isAdmin    Boolean  @default(false)
+  enrolledAt DateTime @default(now())
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  class     Class    @relation(fields: [classId], references: [id])
+  classId   String
+  sender    Profile  @relation(fields: [senderId], references: [id])
+  senderId  String
+  message   String   @db.Text
+  sentAt    DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Quiz {
+  id         String         @id @default(uuid())
+  title      String
+  class      Class          @relation(fields: [classId], references: [id])
+  classId    String
+  createdBy  Profile          @relation("CreatedQuizzes", fields: [creatorId], references: [id])
+  creatorId  String
+  questions  QuizQuestion[]
+  responses  QuizResponse[]
+
+  createdAt  DateTime       @default(now())
+}
+
+model QuizQuestion {
+  id         String   @id @default(uuid())
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  quizId     String
+  question   String
+  options    String[] // ["A", "B", "C", "D"]
+  correct    String?   // Correct answer like "A"
+}
+
+model QuizResponse {
+  id         String   @id @default(uuid())
+  quiz       Quiz     @relation(fields: [quizId], references: [id])
+  quizId     String
+  student    Profile  @relation(fields: [studentId], references: [id])
+  studentId  String
+  responses  Json     // { questionId: selectedOption }
+  score      Int
+  submittedAt DateTime @default(now())
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  class     Class    @relation(fields: [classId], references: [id])
+  classId   String
+  student   Profile   @relation(fields: [studentId], references: [id])
+  studentId String
+  status    Boolean @default(false)
+  date      DateTime
+}
+
+model Announcement {
+  id         String   @id @default(uuid())
+  class      Class    @relation(fields: [classId], references: [id])
+  classId    String
+  title      String
+  message    String?
+  createdBy  Profile   @relation(fields: [creatorId], references: [id])
+  creatorId  String
+  createdAt  DateTime @default(now())
+}
