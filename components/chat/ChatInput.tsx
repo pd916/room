@@ -13,7 +13,6 @@ import { Input } from '@/components/ui/input';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-import EmojiPicker from '../EmojiPicker';
 import { useProfileStore } from '@/hooks/use-modal-store';
 import { ArrowLeft } from 'lucide-react';
 
@@ -89,9 +88,6 @@ const ChatInput = ({
                             {...field}
                             />
                             <div className='absolute top-7 right-8 text-slate-400'>
-                                <EmojiPicker
-                                onChange={(emoji: string) => field.onChange(`${field.value} ${emoji}`)}
-                                />
                             </div>
                             <div className='absolute top-9 left-8 cursor-pointer text-green-900'>
                                 <button type='submit'>
