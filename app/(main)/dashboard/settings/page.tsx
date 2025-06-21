@@ -28,7 +28,7 @@ const Settings = () => {
     fetchClasses();
   }, [profile]); // <-- re-run when profile is loaded
     return (
-      <div className="pl-16 flex items-center gap-2 w-full h-full">
+      <div className="pl-11 my-2 flex items-center gap-2 w-full h-full">
         {isLoading && <Loader2 className="h-6 w-6 text-muted-foreground animate-spin"/>}
         {classes?.map((item) => (
           <ClassItem

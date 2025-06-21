@@ -48,6 +48,7 @@ model Class {
   startTime     DateTime?
   livekitRoomId String?
   isPublished Boolean @default(false)
+  isLive Boolean @default(false)
 
   enrollments   ClassEnrollment[]
   messages      Message[]
@@ -132,10 +133,11 @@ model Attendance {
 
 model Announcement {
   id         String   @id @default(uuid())
-  class      Class    @relation(fields: [classId], references: [id])
-  classId    String
+  class      Class ?   @relation(fields: [classId], references: [id])
+  classId    String?
   title      String
   message    String?
+  imageUrl   String?
   createdBy  Profile   @relation(fields: [creatorId], references: [id])
   creatorId  String
   createdAt  DateTime @default(now())

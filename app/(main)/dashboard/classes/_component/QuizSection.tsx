@@ -1,6 +1,6 @@
 "use client"
 import { Class, ClassEnrollment, Profile, Quiz, QuizQuestion, QuizResponse } from '@prisma/client'
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { createQuizResponse } from '@/action/create-quiz';
 import { toast } from 'sonner';
@@ -90,7 +90,6 @@ const handlePrev = () => {
   const prevIndex = Math.max(currentQuestionIndex - 1, 0);
   setCurrentQuestionIndex(prevIndex);
   socket?.emit("quiz:question-update", { quizId, index:prevIndex });
-
 };
 
 useQuizSocket({
@@ -108,13 +107,13 @@ useQuizSocket({
   const currentQuestion = questions.length > 0 ? questions[currentQuestionIndex] : null;
   console.log(currentQuestion?.options, questions, "quest")
   return (
-    <div className='rounded-sm bg-[#336727] text-white min-h-[220px] p-3'>
-      <h1 className='text-lg font-bold uppercase'>Quiz</h1>
+    <div className='rounded-sm border text-white min-h-[220px] p-3'>
+      <h1 className='text-lg text-muted-foreground font-bold capitalize'>Quiz</h1>
       {quizCompleted ? (
         <div className='overflow-hidden flex flex-col items-center justify-center'>
         <Image src="/quiz-completed.png" alt='quiz' width={250} height={240} 
         className='object-conver animate-bounce transition duration-700 '/>
-        <p className='text-xs font-semibold'>Quiz Completed</p>
+        <p className='text-xs text-muted-foreground font-semibold'>Quiz Completed</p>
         </div>
       ) : (  
          <div className="flex flex-col gap-2">

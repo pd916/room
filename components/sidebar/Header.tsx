@@ -13,7 +13,6 @@ const Header = () => {
       <Toggle/>
       <div className='flex items-center gap-4 px-5'>
         <Separator orientation="vertical" className="h-6 w-[2px] bg-slate-800 mx-2"/>
-        <h2>Connected</h2>
         <ProfileHeader/>
       </div>
     </div>

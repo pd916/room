@@ -24,12 +24,36 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Server misconfigured' }, { status: 500 });
   }
 
-  const at = new AccessToken(apiKey, apiSecret, { identity: username });
-  // const canPublish = role === 'teacher';
-  at.addGrant({ room, roomJoin: true, canPublish:true, canSubscribe: true });
+  const identity = `${role}-${username}`;
+  const token = new AccessToken(apiKey, apiSecret, {
+    identity,
+    name: username,
+  })
+
+  token.addGrant({
+    room,
+    roomJoin: true,
+    canPublish: true,
+    canSubscribe: true,
+    canPublishData: true,
+  });
 
   return NextResponse.json(
-    { token: await at.toJwt() },
-    { headers: { "Cache-Control": "no-store" } },
+    { token: await token.toJwt() },
+    { headers: { "Cache-Control": "no-store" } }
   );
+
+  // const at = new AccessToken(apiKey, apiSecret, { identity: username });
+  // // const canPublish = role === 'teacher';
+  // at.addGrant({ 
+  //   room, 
+  //   roomJoin: true, 
+  //   canPublish:true, 
+  //   canSubscribe: true 
+  // });
+
+  // return NextResponse.json(
+  //   { token: await at.toJwt() },
+  //   { headers: { "Cache-Control": "no-store" } },
+  // );
 }

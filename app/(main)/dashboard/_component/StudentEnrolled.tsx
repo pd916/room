@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ClassEnrollment, Profile} from '@prisma/client'
 import React from 'react'
-import StudentData from "./student-data";
+import StudentData from "../../(home)/_componet/student-data";
 
 interface ClassEnrollmentWithProfile extends ClassEnrollment {
   profile: Profile

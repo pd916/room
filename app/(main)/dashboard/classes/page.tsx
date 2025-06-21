@@ -2,19 +2,11 @@ import { db } from '@/lib/db'
 import React from 'react'
 import ClassItem from '../_component/ClassItems'
 import { Separator } from '@/components/ui/separator'
+import { publishedClasses } from '@/lib/published-classes'
+import { upcomingClasses } from '@/constant'
 
 const page = async () => {
-    const classes = await db.class.findMany({
-      where: {
-    startTime: {
-      gt: new Date(), // this filters to only future classes
-    },
-    isPublished: true // optional: only include published ones
-    },
-    include: {
-      enrollments: true,
-    },
-    }) 
+    const classes = await publishedClasses();
 
   const completedClasses = await db.class.findMany({
   where: {
@@ -32,7 +24,6 @@ const page = async () => {
 
   return (
    <div className="p-6 max-w-6xl mx-auto">
-  <h1 className="capitalize text-2xl font-semibold text-center mb-8">Classes</h1>
 
   <div className="flex flex-col md:flex-row md:space-x-10">
     {/* Upcoming Classes */}
@@ -41,7 +32,7 @@ const page = async () => {
         Upcoming Classes ({classes.length})
       </h2>
       <div className="flex flex-col gap-6">
-        {classes.map((item) => (
+        {upcomingClasses.map((item) => (
           <ClassItem key={item?.id} initialData={item} />
         ))}
       </div>
