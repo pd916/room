@@ -116,7 +116,7 @@ const EditProfile = () => {
                                     className="uppercase text-xs font-bold text-zinc-500
                                     dark:text-secondary/70"
                                     >
-                                        Server name
+                                        Name
                                     </FormLabel>
                                     <FormControl>
                                         <Input 
